@@ -2,11 +2,11 @@
 Chatbot con Api Ollama
 
 **Instalación**
-Cree un proyecto en NetBeans. Seleccione el proyecto y váyase en la parte superior a la Pestaña que dice "Team" -> "Git" -> "Clone"
+Váyase en la parte superior a la Pestaña que dice "Team" -> "Git" -> "Clone"
 En la parte que dice "Repository URL", ponga el link del repositorio GitHub (https://github.com/Paulo42006/ChatBotDP.git), luego cliquee "Next".
-Seleccione ambas clases, main y master. Otra vez "Next".
-Escoja dónde guardará el Clone (hágalo en la misma carpeta del proyecto que creó). Cliquee Finish.
-Luego le saldrá una pestaña que le preguntará dónde guardar los componentes de la clase "master" del proyecto. Póngalos también en la carpeta del proyecto que creó.
+Seleccione ambas clases, main y master (también están las tres ramas, dependiendo de en qué vaya a trabajar). Otra vez "Next".
+Escoja dónde guardará el Clone. Cuando salga la parte de Checkout Branch, importante escoger la clase "master", ya que es la que tiene todo el código principal. Cliquee Finish.
+Luego le saldrá una pestaña que le preguntará dónde guardar los componentes de la clase "master" del proyecto.
 De esta forma ya tendrá el proyecto instalado.
 
 **Uso**
