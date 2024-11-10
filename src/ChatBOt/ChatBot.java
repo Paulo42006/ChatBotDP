@@ -2,6 +2,10 @@ package ChatBOt;
 
 // hola como estas
 // holiii
+
+// hoolaaaaaaa
+
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
