@@ -70,7 +70,7 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="mensajeField" min="-2" pref="70" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="38" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>

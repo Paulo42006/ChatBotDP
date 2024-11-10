@@ -15,6 +15,7 @@ import javax.swing.*;
 
 public class ChatBot extends javax.swing.JFrame {
 
+    //manejo de los chats con arreglos, mas especificamente ArrayLists (son arreglos pero sin tamaño predefinido y mas faciles de usar)
     private int chatCount = 1, chatSelected = 0;
     private final ArrayList<JButton> chatButtons = new ArrayList<>();
     private ArrayList<String> chatMsgs = new ArrayList<>();
@@ -48,6 +49,7 @@ public class ChatBot extends javax.swing.JFrame {
         });
     }
 
+    //metodo para procesar la respuesta
     private String obtenerRespuestaDeOllama(String mensaje) {
         final String mensajeDemora = "Cargando respuesta del chatbot, por favor espera...";
         final int maxIntentos = 3;
@@ -64,6 +66,7 @@ public class ChatBot extends javax.swing.JFrame {
         timer.start();
 
         while (intentos < maxIntentos) {
+            //Metodos utilizados para capturar la respuesta de la API
             try {
                 String urlString = "http://localhost:11434/api/chat";
                 String jsonInputString = "{\"model\": \"llama3.2:1b\", \"stream\": false, \"messages\": [ { \"role\": \"user\", \"content\": \" Responde en español: " + mensaje + " \" } ] }"; // Solicitud
@@ -90,34 +93,42 @@ public class ChatBot extends javax.swing.JFrame {
                 in.close();
                 timer.stop();
                 return capturarRespuesta(respuesta.toString());
-                
+
+                //Controlador de errores robusto que da diferentes mensajes segun el error (Gestion de errores)
+                //Error de conexion
             } catch (java.net.ConnectException e) {
                 intentos++;
                 if (intentos >= maxIntentos) {
                     timer.stop();
                     respuestaField.append("Bot: No se pudo conectar al servidor después de varios intentos.\n");
                     chatMsgs.set(chatSelected, chatMsgs.get(chatSelected) + "Bot: No se pudo conectar al servidor después de varios intentos.\n");
-                    return "Error de conexión. Verifica la red o el servidor de la API.";
+                    return "Error de conexión. Verifica la red o el servidor de la API."; //mensajes de error
                 }
+
+                //Error de conexion a la API
             } catch (java.io.IOException e) {
                 intentos++;
                 if (intentos >= maxIntentos) {
                     timer.stop();
                     respuestaField.append("Bot: Error de entrada/salida en la conexión con la API.\n");
                     chatMsgs.set(chatSelected, chatMsgs.get(chatSelected) + "Bot: Error de entrada/salida en la conexión con la API.\n");
-                    return "Error al conectar con la API. Inténtalo más tarde.";
+                    return "Error al conectar con la API. Inténtalo más tarde."; //mensajes de error
                 }
+
+                //Errores mas generales al conectar con el chatbot    
             } catch (Exception e) {
                 System.out.println(e);
                 timer.stop();
                 respuestaField.append("Bot: " + mensajeDemora + "\n");
                 chatMsgs.set(chatSelected, chatMsgs.get(chatSelected) + "Bot: " + mensajeDemora + "\n");
-                return "Error al conectar con el chatbot.";
+                return "Error al conectar con el chatbot."; //mensajes de error
             }
         }
-        return "Error desconocido. Intente denuevo.";
+        //Error desconocido o no manejado por los diferentes filtros de errores
+        return "Error desconocido. Intente denuevo."; //mensajes de error
     }
 
+    //metodo para capturar la respuesta de la api
     private String capturarRespuesta(String jsonResponse) {
         try {
             System.out.println(jsonResponse);
@@ -132,10 +143,12 @@ public class ChatBot extends javax.swing.JFrame {
         }
     }
 
+    //metodo para actualizar el chat
     private void actualizarHistorial() {
         respuestaField.setText(chatMsgs.get(chatSelected));
     }
 
+    //metodo para el envio de la pregunta
     private void enviarPregunta() {
         String userText = mensajeField.getText();
         respuestaField.append("Tú: " + userText + "\n");
@@ -148,6 +161,7 @@ public class ChatBot extends javax.swing.JFrame {
         chatMsgs.set(chatSelected, chatMsgs.get(chatSelected) + "Bot: " + botResponse + "\n");
     }
 
+    //metodo para la creación de un nuevo chat
     private void nuevoChat() {
         JButton nuevoChatButton = new JButton("Chat " + (chatCount + 1));
         chatMsgs.add("");
@@ -183,6 +197,25 @@ public class ChatBot extends javax.swing.JFrame {
 
         panel.revalidate();
         panel.repaint();
+    }
+
+    //metodo para vaciar los chats
+    private void vaciarChat() {
+        if (chatMsgs.get(chatSelected).isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El chat ya está vacío.");
+        } else {
+            int respuesta = JOptionPane.showConfirmDialog(null,
+                    "¿Estás seguro de que deseas eliminar este elemento?",
+                    "Confirmación",
+                    JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                respuestaField.setText("");
+                chatMsgs.set(chatSelected, "");
+                JOptionPane.showMessageDialog(null, "Elemento eliminado correctamente.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Acción cancelada.");
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -321,7 +354,7 @@ public class ChatBot extends javax.swing.JFrame {
                         .addContainerGap(39, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(mensajeField, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(38, Short.MAX_VALUE))))
         );
 
         pack();
@@ -343,21 +376,7 @@ public class ChatBot extends javax.swing.JFrame {
     }//GEN-LAST:event_vaciarButtonMouseClicked
 
     private void vaciarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vaciarButtonActionPerformed
-        if (chatMsgs.get(chatSelected).isEmpty()) {
-            JOptionPane.showMessageDialog(null, "El chat ya está vacío.");
-        } else {
-            int respuesta = JOptionPane.showConfirmDialog(null,
-                    "¿Estás seguro de que deseas eliminar este elemento?",
-                    "Confirmación",
-                    JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                respuestaField.setText("");
-                chatMsgs.set(chatSelected, "");
-                JOptionPane.showMessageDialog(null, "Elemento eliminado correctamente.");
-            } else {
-                JOptionPane.showMessageDialog(null, "Acción cancelada.");
-            }
-        }
+        vaciarChat();
     }//GEN-LAST:event_vaciarButtonActionPerformed
 
     public static void main(String args[]) {
